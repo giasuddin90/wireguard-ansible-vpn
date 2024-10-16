@@ -1,0 +1,7 @@
+- name: Wireguard vpn palybook
+  hosts: myhosts
+  become: yes  # Ensure privilege escalation
+  become_method: sudo
+
+  roles:
+    - wireguard
