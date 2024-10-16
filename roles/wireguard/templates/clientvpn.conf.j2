@@ -1,0 +1,12 @@
+[Interface]
+PrivateKey = {{ gias_private_key.stdout }}
+Address = 10.0.1.20/32
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = {{ wg_public_key.stdout }}
+AllowedIPs = 0.0.0.0/0
+Endpoint = 13.211.103.196:51820
+
+
+#{{ gias_public_key.stdout }}
