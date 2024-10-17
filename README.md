@@ -11,6 +11,8 @@ Before using this project, ensure that the following prerequisites are met:
 2. **Ansible** is installed on the control machine.
 3. **SSH access** to the target hosts is properly configured.
 
+![alt text](wireguard_security_group.png))
+
 ## Project Setup
 
 ### 1. Clone the Repository
@@ -62,9 +64,8 @@ You'll need to configure the inventory file to match the target servers where Wi
 2. Edit \`inventory.ini\` to include the target servers. Here's an example of the inventory file format:
 
     ```
-    [vpn-servers]
-    server1 ansible_host=192.168.1.10 ansible_user=root
-    server2 ansible_host=192.168.1.11 ansible_user=root
+   [myhosts]
+   <ip-address> ansible_user=ubuntu ansible_ssh_private_key_file=<ssh key pem file path>
     ```
 
 - Replace \`server1\`, \`server2\`, and their respective IP addresses with the actual hosts you want to configure WireGuard on.
