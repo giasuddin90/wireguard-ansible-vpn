@@ -27,8 +27,6 @@
     dest: /etc/wireguard/public.key
     mode: '0644'
 
-# client key creation
-
 - name: Create client directory for WireGuard keys
   file:
     path: /etc/wireguard/client
@@ -36,6 +34,9 @@
     mode: '0755'
   become: yes
 
+
+# client key creation
+# gias key
 - name: Generate private key for gias client
   shell: wg genkey | tee /etc/wireguard/client/gias_private_key
   register: gias_private_key
@@ -52,7 +53,23 @@
     dest: /etc/wireguard/client/gias_public_key
     mode: '0644'
 
-# client file close
+# sudarsan key
+- name: Generate private key for sudarsan client
+  shell: wg genkey | tee /etc/wireguard/client/sudarsan_private_key
+  register: sudarsan_private_key
+  become: yes
+
+- name: Generate public key for sudarsan client
+  shell: cat /etc/wireguard/client/sudarsan_private_key | wg pubkey
+  register: sudarsan_public_key
+  become: yes
+
+- name: Save sudarsan public key to file
+  copy:
+    content: "{{ sudarsan_public_key.stdout }}"
+    dest: /etc/wireguard/client/sudarsan_public_key
+    mode: '0644'
+# key file close
 
 
 - name: Create WireGuard configuration file
@@ -61,11 +78,20 @@
     dest: /etc/wireguard/wg0.conf
     mode: '0644'
 
-- name: Create WireGuard client file
+# client conf file
+- name: Create WireGuard gias file
   template:
-    src: clientvpn.conf.j2
-    dest: /etc/wireguard/client/clientvpn.conf
+    src: giasuddin.conf.j2
+    dest: /etc/wireguard/client/giasuddin.conf
     mode: '0644'
+
+- name: Create WireGuard sudarsan file
+  template:
+    src: sudarsan.conf.j2
+    dest: /etc/wireguard/client/sudarsan.conf
+    mode: '0644'
+
+# end client conf file
 
 - name: Enable WireGuard on boot
   systemd:
@@ -104,9 +130,15 @@
     state: restarted
 
 # Fetch the WireGuard configuration file to your local machine
-- name: Download WireGuard configuration file
+- name: Download WireGuard giasuddin file
   fetch:
-    src: /etc/wireguard/client/clientvpn.conf
-    dest: ./clientvpn.conf
+    src: /etc/wireguard/client/giasuddin.conf
+    dest: ./giasuddin.conf
+    flat: yes
+
+- name: Download WireGuard sudarsan file
+  fetch:
+    src: /etc/wireguard/client/sudarsan.conf
+    dest: ./sudarsan.conf
     flat: yes
 

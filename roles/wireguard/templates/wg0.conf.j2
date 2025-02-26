@@ -10,3 +10,8 @@ PrivateKey = {{ wg_private_key.stdout }}
 #gias
 AllowedIPs = 10.0.1.20/32
 PublicKey = {{ gias_public_key.stdout }}
+
+[Peer]
+#sudarsan
+AllowedIPs = 10.0.1.21/32
+PublicKey = {{ sudarsan_public_key.stdout }}
