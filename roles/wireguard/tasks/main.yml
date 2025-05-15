@@ -69,9 +69,44 @@
     content: "{{ sudarsan_public_key.stdout }}"
     dest: /etc/wireguard/client/sudarsan_public_key
     mode: '0644'
+
+# foysal key
+- name: Generate private key for foysal client
+  shell: wg genkey | tee /etc/wireguard/client/foysal_private_key
+  register: foysal_private_key
+  become: yes
+
+- name: Generate public key for foysal client
+  shell: cat /etc/wireguard/client/foysal_private_key | wg pubkey
+  register: foysal_public_key
+  become: yes
+
+- name: Save foysal public key to file
+  copy:
+    content: "{{ foysal_public_key.stdout }}"
+    dest: /etc/wireguard/client/foysal_public_key
+    mode: '0644'
+
+
+# masnun key
+- name: Generate private key for masnun client
+  shell: wg genkey | tee /etc/wireguard/client/masnun_private_key
+  register: masnun_private_key
+  become: yes
+
+- name: Generate public key for masnun client
+  shell: cat /etc/wireguard/client/masnun_private_key | wg pubkey
+  register: masnun_public_key
+  become: yes
+
+- name: Save masnun public key to file
+  copy:
+    content: "{{ masnun_public_key.stdout }}"
+    dest: /etc/wireguard/client/masnun_public_key
+    mode: '0644'
+
+
 # key file close
-
-
 - name: Create WireGuard configuration file
   template:
     src: wg0.conf.j2
@@ -89,6 +124,18 @@
   template:
     src: sudarsan.conf.j2
     dest: /etc/wireguard/client/sudarsan.conf
+    mode: '0644'
+
+- name: Create WireGuard masnun file
+  template:
+    src: masnun.conf.j2
+    dest: /etc/wireguard/client/masnun.conf
+    mode: '0644'
+
+- name: Create WireGuard foysal file
+  template:
+    src: foysal.conf.j2
+    dest: /etc/wireguard/client/foysal.conf
     mode: '0644'
 
 # end client conf file
@@ -140,5 +187,17 @@
   fetch:
     src: /etc/wireguard/client/sudarsan.conf
     dest: ./sudarsan.conf
+    flat: yes
+
+- name: Download WireGuard masnun file
+  fetch:
+    src: /etc/wireguard/client/masnun.conf
+    dest: ./masnun.conf
+    flat: yes
+
+- name: Download WireGuard foysal file
+  fetch:
+    src: /etc/wireguard/client/foysal.conf
+    dest: ./foysal.conf
     flat: yes
 
